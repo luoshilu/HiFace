@@ -1,0 +1,116 @@
+var nodemailer = require('nodemailer');
+var express = require('express');
+var router = express.Router();
+var Sign = require('../modules/signing');
+
+// 密钥生成
+// 24个字母中间随机抽取(5-10以内随机数)个字母(随机大小写)，100内随机抽取（5-10以内随机数)个数字，将数字掺和在字母中间,最后形成密钥。
+function getkey () {
+    // 
+    var zmNum = Math.round(Math.random()*5)+5;
+    var szNum = Math.round(Math.random()*5)+5;
+
+    // 
+    var dxZm = [65,97];
+    var zm = [];
+    // 随机字母
+    for (var i=0;i<zmNum;i++) {
+      // 随机大小写
+      var dx = dxZm[Math.round(Math.random()*1)];
+      // 随机字母
+      var z = Math.ceil(Math.random()*25);
+      zm.push(String.fromCharCode(dx + z));
+    }
+    // 随机数字
+    var sz = [];
+    for (var j=0;j<szNum;j++) {
+      sz.push(Math.ceil(Math.random()*100))
+    }
+
+    // key
+    var key = [];
+    var length = 0;
+    zmNum < szNum ? length = zmNum : length = szNum;
+
+    for (var m = 0;m<length;m++) {
+      key.push(zm[m]);
+      key.push(sz[m]);
+    }
+    var stKey = key.join('');
+    return stKey
+}
+
+
+router.post('/',function(req,res){
+    var data = req.body
+    var transporter = nodemailer.createTransport({
+        service: 'qq',
+        auth: {
+            user: '978337784@qq.com',
+            pass: 'zonrbezxkahdbebc'
+        }
+    });
+
+    var key = getkey();
+    // 激活链接
+
+    var link = "http://localhost:3000/actId?mail="+ data.mail +"&key="+ key;
+
+    console.log('=====reqdata======');
+    console.log(data);
+    var mailOptions = {
+        from: '978337784@qq.com', // sender address
+        to: data.mail, // list of receivers
+        subject: '欢迎注册LikeFaceimg', // Subject line
+        text: '这是激活链接:', // plaintext body
+        html: "<h1>激活链接:<h1><a href='"+link+"'>"+link+"</a>"
+    };
+/*    // res.json({data:0});
+    Sign.create({mail:'1585159568@qq.com',psw:'123321'})
+    // Sign.remove({"__v":0},function(){});
+    Sign.fetch(function(err, result){
+        console.log(result);
+        // res.json(result)
+    });
+    res.json({data:true});*/
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            res.json({data:false});
+        }else{
+            // 将临时信息存入数据库
+            // 加入key
+            data.key = key;
+
+            // 设置5分钟链接超时
+            setTimeout(function(){
+                // 删除注册信息
+                Sign.remove({mail:data.mail})
+            },1000*60*5);
+
+
+            // 先将相同注册信息删除
+            Sign.remove({mail:data.mail},function(){
+                // 添加注册信息
+                Sign.create(data,function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        Sign.find(function(err,result){
+                        if(err) {
+                                console.log(err);
+                            }
+                            console.log('====result======');
+                            console.log(result);
+                        });
+                    }
+                });
+            });
+
+            // test
+            // Sign.remove({"__v":0},function(){});
+            res.json({data:true});
+        }
+    });
+})
+module.exports = router;
