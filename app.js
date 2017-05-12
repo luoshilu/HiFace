@@ -16,6 +16,7 @@ var mailverify = require('./routes/mailverify');
 var actId = require('./routes/actId');
 var login = require('./routes/login');
 var upload = require('./routes/upload');
+var imgTemplate = require('./routes/imgTemplate');
 var exit = require('./routes/exit');
 
 // 连接mogoodb数据库
@@ -87,6 +88,7 @@ app.use('/mailverify', mailverify);
 app.use('/actId', actId);
 app.use('/login', login);
 app.use('/upload', upload);
+app.use('/imgTemplate', imgTemplate);
 app.use('/exit', exit);
 // 404中间件
 // catch 404 and forward to error handler
