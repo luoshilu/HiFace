@@ -6,7 +6,6 @@ var Users = require('../modules/users')
 var signing = false;
 
 router.get('/',function(req,res){
-    // console.log(req.query.key);
     var mail = req.query.mail;
     var key = req.query.key;
 
@@ -41,8 +40,8 @@ router.get('/',function(req,res){
       }
     })
 });
-
-router.post('/loading',function(req,res,next){
+// 等待激活
+router.post('/loading',function(req,res){
     var clTime = setInterval(function(){
       if (signing) {
         clearTimeout(clTime);
@@ -51,8 +50,8 @@ router.post('/loading',function(req,res,next){
       }
     },1000);
 });
-
-router.post('/referMail',function(req,res,next){
+// 查询是否为已注册邮箱
+router.post('/referMail',function(req,res){
   var mail = req.body.mail;
   Users.find({mail: mail}, function (err,result) {
     if (err || !result[0]) {
@@ -62,7 +61,8 @@ router.post('/referMail',function(req,res,next){
     }
   })
 });
-router.post('/referName',function(req,res,next){
+// 查询是否为已注册用户
+router.post('/referName',function(req,res){
   var name = req.body.name;
   Users.find({name: name}, function (err,result) {
     if (err || !result[0]) {

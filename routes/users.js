@@ -1,15 +1,12 @@
 var express = require('express');
-// var mongoose = require('mongoose');//导入mongoose模块
-
-var Users = require('../modules/users');//导入模型数据模块
+var Imgtotal = require(('../modules/imgtotal'));
+var Imgnewest = require('../modules/imgnewest');
+var Users = require('../modules/users');
 
 var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    // res.json({data:0});
-    // Users.create({data:'1585159568@qq.com',psw:'123321'})
-    // Users.remove({"__v":0},function(){});
     Users.fetch(function(err, result){
         res.json(result)
     });
@@ -23,17 +20,63 @@ router.get('/users', function(req, res, next) {
         }
         console.log(result);
         res.json(result);
-        // res.render('users',{title: '用户列表', users: users});  //这里也可以json的格式直接返回数据res.json({data: users});
     });
-    // 基于静态方法的查询
-/*    Users.fetch(function(error, result){
-        if(error) {
-            console.log(error);
-        } else {
-            console.log('resule:' + result[0]);
-        }
-        //关闭数据库链接
-        // db.close();
-      });*/
+});
+//查询所有用户数据
+router.get('/aboutme', function(req, res, next) {
+    var name = req.query.name
+    console.log(name);
+    Users.find({name: name}, function(err,result){
+        console.log(result);
+        res.json({headImg: result.headurl, about: result.about})
+    })
+});
+
+//修改个人资料
+router.post('/edit', function(req, res, next) {
+    var data = req.body;
+    var search = {name: data.oldname};
+    var change = {};
+
+    function edit(search,change) {
+        // 修改
+        Users.update(search,change,function (err) {
+            try {
+                if (err) {
+                    res.json({res: false})
+                } else {
+                    res.json({res: true})
+                }
+            } catch(e) {
+                console.log(e);
+            }
+        })
+    }
+    // 已经更改了昵称
+    if (data.name !== data.oldname){
+        // 查询用户名是否已存在
+        Users.find({name: data.name},function(err,result){
+            if (result[0]) {
+                res.json({res:false})
+            } else {
+                if (data.about) {
+                    edit({name: data.oldname},{name: data.name, about: data.about});
+                } else {
+                    edit({name: data.oldname},{name: data.name});
+                }
+                // 更新图
+                Imgtotal.update({creator: data.oldname},{$set:{creator: data.name}}, {multi:true}, function(err,result){
+                    console.log(result);
+                });
+                Imgnewest.update({creator: data.oldname},{$set:{creator: data.name}}, {multi:true}, function(err,result){
+                    console.log(result);
+                });
+            }
+        })
+    } else if (data.about){
+        edit({name: data.oldname},{about: data.about});
+    } else {
+        res.json({res: true})
+    }
 });
 module.exports = router;

@@ -4,7 +4,6 @@ var router = express.Router();
 var Sign = require('../modules/signing');
 
 // 密钥生成
-// 24个字母中间随机抽取(5-10以内随机数)个字母(随机大小写)，100内随机抽取（5-10以内随机数)个数字，将数字掺和在字母中间,最后形成密钥。
 function getkey () {
     // 
     var zmNum = Math.round(Math.random()*5)+5;
@@ -39,8 +38,6 @@ function getkey () {
     var stKey = key.join('');
     return stKey
 }
-
-
 router.post('/',function(req,res){
     var data = req.body
     var transporter = nodemailer.createTransport({
@@ -50,29 +47,18 @@ router.post('/',function(req,res){
             pass: 'zonrbezxkahdbebc'
         }
     });
-
     var key = getkey();
     // 激活链接
-
     var link = "http://localhost:3000/actId?mail="+ data.mail +"&key="+ key;
 
-    console.log('=====reqdata======');
-    console.log(data);
     var mailOptions = {
         from: '978337784@qq.com', // sender address
         to: data.mail, // list of receivers
-        subject: '欢迎注册LikeFaceimg', // Subject line
+        subject: '欢迎注册HiFace', // Subject line
         text: '这是激活链接:', // plaintext body
         html: "<h1>激活链接:<h1><a href='"+link+"'>"+link+"</a>"
     };
-/*    // res.json({data:0});
-    Sign.create({mail:'1585159568@qq.com',psw:'123321'})
-    // Sign.remove({"__v":0},function(){});
-    Sign.fetch(function(err, result){
-        console.log(result);
-        // res.json(result)
-    });
-    res.json({data:true});*/
+    // 发送
     transporter.sendMail(mailOptions, function(error, info){
         if(error){
             console.log(error);

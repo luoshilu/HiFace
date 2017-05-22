@@ -1,14 +1,9 @@
 var mongoose = require('mongoose');
 
 //声明一个mongoons对象
-var imgNewest = new mongoose.Schema({
-    tag: String,// 标签
-    creator: String,// 创建人
-    score: Number,// 评分
-    scoreUserList: Object,// 评分的用户列表
-    url: String,
-    collect_count: Number, // 收藏人数
-    expire: { type: Date, index: { expireAfterSeconds: 1200000 } },
+var TagSchema = new mongoose.Schema({
+    name: String, // 标签列表
+    hot: Boolean,
     meta: {
         createAt: {
             type: Date,
@@ -22,11 +17,11 @@ var imgNewest = new mongoose.Schema({
 });
 
 // 添加 mongoose 静态方法，静态方法在Model层就能使用
-imgNewest.statics.findbytitle = function(title, callback) {
+TagSchema.statics.findbytitle = function(title, callback) {
     return this.model('mongoose').find({data: title}, callback);
 };
 //每次执行都会调用,时间更新操作
-imgNewest.pre('save', function(next) {
+TagSchema.pre('save', function(next) {
     if(this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now();
     }else {
@@ -36,7 +31,7 @@ imgNewest.pre('save', function(next) {
 });
 
 //查询的静态方法
-imgNewest.statics = {
+TagSchema.statics = {
     findbytitle: function(title, callback) {
         return this.find({first: title}, callback);
     },
@@ -57,4 +52,4 @@ imgNewest.statics = {
 }
 
 //暴露出去的方法
-module.exports = imgNewest;
+module.exports = TagSchema;

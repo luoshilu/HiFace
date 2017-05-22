@@ -4,17 +4,16 @@ var router = express.Router();
 var Users = require('../modules/users');
 var Imgtotal = require('../modules/imgtotal');
 var Imgnewest = require('../modules/imgnewest');
-// 上传策略
+var Tag = require(('../modules/tag'));
+// 生产上传凭证 + 文件命名
 // (要上传的空间,用户的第几张图片,_id,response)
 function setUpload (bucket,imgNum,_id,res) {
-    // var key = 'key'
-    // console.log(bucket, key);
     //构建上传策略函数
     function uptoken(bucket) {
-      var putPolicy = new qiniu.rs.PutPolicy(bucket);
+      var putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + _id + '/' + imgNum);
+      putPolicy.insertOnly = 1;
       return putPolicy.token();
     }
-
     //生成上传 Token
     var token = uptoken(bucket);
     res.json({uptoken: token, imgNum: imgNum, id: _id});
@@ -30,8 +29,6 @@ router.post('/',function(req, res){
       if (err) {
         return
       }else if(findimgNum === undefined){
-        console.log('=====user=====');
-        console.log(user);
         Users.update(
             {_id:_id},
             {imgNum: 1},
@@ -39,20 +36,21 @@ router.post('/',function(req, res){
         )
         setUpload('img-total', 1, res);
       }else{
-        console.log(user);
         setUpload('img-total', user[0].imgNum + 1, _id, res);
       }
     })
 });
-// 上传成功
+
+// 上传图片成功
 router.post('/result',function(req, res, next){
 
     var data = req.body;
     var imgurl = 'http://oowoia3ge.bkt.clouddn.com/' + data.key;
     var name = data.name;
     var imgNum = data.imgNum;
+    var tag = data.tag;
     var img = {
-        tag: [],// 标签
+        tag: tag,// 标签
         creator: name,// 创建人
         score: 0,// 评分
         scoreUserList: [],// 评分的用户列表
@@ -65,13 +63,17 @@ router.post('/result',function(req, res, next){
         {imgNum: imgNum},
         function(){}
     )
-    console.log('img:');
-    console.log(img);
-
+    // 新增标签
+    Tag.find({name: tag}, (err,result) => {
+        if (!result[0]) {
+            Tag.create({name: tag}, (err, result) => {
+                console.log('插入');
+                console.log(result);
+            });
+        }
+    })
     // 新建图片
     Imgtotal.create(img,function(err,result){
-        console.log('==新建图片====');
-        console.log(result);
         res.json({data:true, img:img});
     })
 });
@@ -88,6 +90,41 @@ router.post('/share',function(req, res, next){
             res.json({data: false});
         }
     })
+});
+// ---------------oowoopghd.bkt.clouddn.com
+
+// 上传头像
+router.post('/head',function(req, res){
+
+    var name = req.body.username;
+    Users.find({name: name}, function (err, user) {
+      var _id = user[0]._id;
+      if (err) {
+        return
+      }else{
+        setUpload('user-head', 1, _id, res);
+      }
+    })
+});
+// 上传头像成功
+router.post('/head/result',function(req, res, next){
+
+    var data = req.body;
+    var imgurl = 'http://oowoopghd.bkt.clouddn.com/' + data.key;
+    var name = data.name;
+    console.log('=-=用户data===');
+    console.log(data);
+    // 更新url
+    Users.update(
+        {name:name},
+        {headurl: imgurl},
+        function(err){
+            if (!err) {
+                res.json({data:true});
+            }
+        }
+    )
+
 });
 
 module.exports = router;

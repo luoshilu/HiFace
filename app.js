@@ -1,6 +1,6 @@
 var express = require('express');
 var path = require('path');
-// var favicon = require('serve-favicon');
+var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -11,12 +11,13 @@ var app = express();
 // 路由模块
 var index = require('./routes/index');
 var users = require('./routes/users');
-var lfNew = require('./routes/new');
+var search = require('./routes/search');
 var mailverify = require('./routes/mailverify');
 var actId = require('./routes/actId');
 var login = require('./routes/login');
 var upload = require('./routes/upload');
 var imgTemplate = require('./routes/imgTemplate');
+var tag = require('./routes/tag');
 var exit = require('./routes/exit');
 
 // 连接mogoodb数据库
@@ -28,7 +29,7 @@ mongoose.connect('mongodb://localhost:27017');
 var newSession = require('./conf/newSession')
 
 
-//
+// 当前用户
 var nowUser = require('./middlewares/queryUser');
 
 // 允许其他可请求服务的端口
@@ -43,7 +44,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,7 +54,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req,res,next){
   // console.log(req.headers);
-  res.header("Access-Control-Allow-Origin", req.headers.origin); //需要显示设置来源
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080"); //需要显示设置来源
   res.header("Access-Control-Allow-Credentials",true); //带cookies
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
@@ -65,17 +66,11 @@ app.use(nowUser);
 // 新增session 存入redis 
 app.use(newSession);
 
-//
+// test
 app.use(function (val, req, res, next) {
   console.log('val:');
   console.log(val);
   console.log(req.session);
-  // if (!req.session) {
-  //   console.log('no session');
-  //   return next(new Error('oh no')) // handle error
-  // }else{
-  //   req.session.save()
-  // }
   next() // otherwise continue
 })
 
@@ -83,12 +78,13 @@ app.use(function (val, req, res, next) {
 // 路由
 app.use('/', index);
 app.use('/users', users);
-app.use('/new', lfNew);
+app.use('/search', search);
 app.use('/mailverify', mailverify);
 app.use('/actId', actId);
 app.use('/login', login);
 app.use('/upload', upload);
 app.use('/imgTemplate', imgTemplate);
+app.use('/tag', tag);
 app.use('/exit', exit);
 // 404中间件
 // catch 404 and forward to error handler

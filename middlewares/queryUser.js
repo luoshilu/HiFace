@@ -1,4 +1,4 @@
-var redis = require('../redis/client');
+var redis = require('../conf/redis');
 // 查询当前用户 connect.sid是否有效
 var nowUser = function(req, res, next){
   var ssId = 'sess:' + req.cookies['connect.sid']

@@ -5,7 +5,9 @@ var UsersSchema = new mongoose.Schema({
     mail: String,
     name: String,
     psw: String,
+    headurl: String,
     imgNum: Number,// 图片数量
+    about: String,
     meta: {
         createAt: {
             type: Date,
@@ -25,9 +27,9 @@ UsersSchema.statics.findbytitle = function(title, callback) {
 //每次执行都会调用,时间更新操作
 UsersSchema.pre('save', function(next) {
     if(this.isNew) {
-        this.meta.createAt = this.meta.updateAt = Date.now();
+        this.meta.createAt = this.meta.updateAt = Date.now('yyyy/mm/dd/ HH:mm:ss');
     }else {
-        this.meta.updateAt = Date.now();
+        this.meta.updateAt = Date.now('yyyy/mm/dd/ HH:mm:ss');
     }
     next();
 });

@@ -4,9 +4,6 @@ var redis = require('../conf/redis')
 router.post('/',function(req, res, next){
     // var ssId2 = 'sess:' + req.cookies['connect.sid']
     var ssId = 'sess:' + req.body.ck;
-    console.log('=========');
-    console.log(ssId);
-    console.log('========2');
     // console.log(ssId2);
     redis.del(ssId,function(err,result){
         if (err){

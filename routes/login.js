@@ -29,9 +29,7 @@ router.post('/',function(req, res, next){
             }
             redis.del(ssId,function(){
               // 将用户名加入到redis session中
-              redis.hmset(ssId,{'cookie': strck,'mail': mail,name: name},function(err,result){
-                  console.log('加入哈希表:');
-                  console.log(result);
+              redis.hmset(ssId,{'cookie': strck,'mail': mail,name: name},function(){
                   // 设定有效时间
                   redis.expire(ssId,600,function(err,result){
                     console.log('设定有效时间:');
@@ -54,9 +52,12 @@ router.post('/',function(req, res, next){
         res.cookie('mail',user.mail,{ maxAge: 5*24*60*60*1000 });
         res.cookie('psw',user.psw,{ maxAge: 5*24*60*60*1000 });
       }
-      console.log(123);
-      // res.write(JSON.stringify({result: true, username: result[0].name, data:'登录成功！'}));
-      res.json({'verify': true, 'username': result[0].name});
+      res.json({
+        'verify': true,
+        name:result[0].name,
+        about: result[0].about,
+        headurl: result[0].headurl
+      });
     }
   })
 })
