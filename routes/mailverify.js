@@ -49,7 +49,7 @@ router.post('/',function(req,res){
     });
     var key = getkey();
     // 激活链接
-    var link = "http://localhost:3000/actId?mail="+ data.mail +"&key="+ key;
+    var link = "http://118.89.104.12/actId?mail="+ data.mail +"&key="+ key;
 
     var mailOptions = {
         from: '978337784@qq.com', // sender address
