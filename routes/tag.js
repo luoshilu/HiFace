@@ -3,7 +3,7 @@ var router = express.Router();
 // var Imgtotal = require(('../modules/imgtotal'));
 var Tag = require(('../modules/tag'));
 /* 获取tag */
-router.get('/', function(req, res) {
+router.post('/', function(req, res) {
   var tagList = [];
   try {
     Tag.find({},function(err,back){

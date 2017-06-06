@@ -52,7 +52,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req,res,next){
-  // console.log(req.headers);
+  console.log('req.header:');
+  console.log(req.headers);
   res.header("Access-Control-Allow-Origin", req.headers.origin); //需要显示设置来源
   res.header("Access-Control-Allow-Credentials",true); //带cookies
   res.header("Content-Type", "application/json;charset=utf-8");

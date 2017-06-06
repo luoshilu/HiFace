@@ -18,33 +18,6 @@ function getImglist(db, currentPage, num, search, sort, res) {
   db.find(search).sort(sort).exec(function(err,back){
     var length = back.length;
     var imgob = {};
-/*    var i = (currentPage-1)*num;
-    function downloadimg(i) {
-      imgob = {
-        imgurl: policy.makeRequest(back[i].url),//构建私有空间的链接
-        score: back[i].score,
-        creator: back[i].creator,
-        imghot: back[i].hot || 0,
-        createDate: back[i].meta.createAt,
-        tag: back[i].tag,
-        sc: false
-      }
-      Users.find({name: back[i].creator},(err,result) => {
-        if (!err && result[0]) {
-          imgob.userhead = result[0].headurl || ''
-        }
-        download.push(imgob);
-      })
-      download.push(imgob);
-      i++;
-      if (i > length - 1) {
-        return
-      }
-      if (i < currentPage*num){
-        downloadimg(i)
-      }
-    }
-    downloadimg(i);*/
     for (var i = (currentPage-1)*num;i < currentPage*num;i++) {
       if (i > length - 1) {
         break
@@ -100,11 +73,15 @@ router.post('/new',function(req, res){
 })
 
 router.post('/hot', function(req, res) {
-  // var search = req.query.search;
+  var search = req.query.search;
+  var tag = {};
+  if (search !== '' && search) {
+    tag = {
+      tag: new RegExp(search)
+    };
+  }
   var currentPage = req.body.page;
   var num = req.body.num;
-  var tag = {
-  };
   getImglist(Imgtotal, currentPage, num, tag, {'hotVal':'1'}, res);
 }) 
 
