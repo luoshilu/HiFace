@@ -13,7 +13,6 @@ router.post('/', function(req, res, next) {
       // res.redirect('/index.html');
     }else if(!req.username){
       console.log("已登录");
-      // res.redirect('/index.html');
     }else{
       // 查询用户信息
       Users.find({name: req.username},function(err,result){

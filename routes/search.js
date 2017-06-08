@@ -39,6 +39,9 @@ function getImglist(db, currentPage, num, search, sort, res) {
   });
 }
 
+router.get('/', function(req,res){
+  res.redirect('/index.html');
+})
 router.post('/', function(req,res){
   var search = req.query.search;
   console.log(search);

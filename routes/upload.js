@@ -8,15 +8,19 @@ var Tag = require(('../modules/tag'));
 // 生产上传凭证 + 文件命名
 // (要上传的空间,用户的第几张图片,_id,response)
 function setUpload (bucket,imgNum,_id,res) {
-    //构建上传策略函数
-    function uptoken(bucket) {
-      var putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + _id + '/' + imgNum);
-      putPolicy.insertOnly = 1;
-      return putPolicy.token();
+    try {
+        //构建上传策略函数
+        function uptoken(bucket) {
+          var putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + _id + '/' + imgNum);
+          putPolicy.insertOnly = 1;
+          return putPolicy.token();
+        }
+        //生成上传 Token
+        var token = uptoken(bucket);
+        res.json({uptoken: token, imgNum: imgNum, id: _id});
+    }catch (e) {
+        console.log('错误:' + e);
     }
-    //生成上传 Token
-    var token = uptoken(bucket);
-    res.json({uptoken: token, imgNum: imgNum, id: _id});
 }
 
 router.post('/',function(req, res){

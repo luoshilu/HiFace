@@ -26,8 +26,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017');
 
 // 将session连接redis缓存
-var newSession = require('./conf/newSession')
-
+var newSession = require('./conf/newSession');
 
 // 当前用户
 var nowUser = require('./middlewares/queryUser');
@@ -52,14 +51,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req,res,next){
-  console.log('req.header:');
-  console.log(req.headers);
   res.header("Access-Control-Allow-Origin", req.headers.origin); //需要显示设置来源
   res.header("Access-Control-Allow-Credentials",true); //带cookies
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 })
-
+app.get('/*', function (req,res,next){
+  res.redirect('/');
+})
 // 查询当前用户
 app.use(nowUser);
 
