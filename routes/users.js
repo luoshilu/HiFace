@@ -6,14 +6,14 @@ var Users = require('../modules/users');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     Users.fetch(function(err, result){
         res.json(result)
     });
 });
 
 //查询所有用户数据
-router.get('/users', function(req, res, next) {
+router.get('/users', function(req, res) {
     Users.fetch(function(err, result) {
         if(err) {
             console.log(err);
@@ -33,10 +33,8 @@ router.get('/aboutme', function(req, res, next) {
 });
 
 //修改个人资料
-router.post('/edit', function(req, res, next) {
+router.post('/edit', function(req, res) {
     var data = req.body;
-    var search = {name: data.oldname};
-    var change = {};
 
     function edit(search,change) {
         // 修改
@@ -64,7 +62,7 @@ router.post('/edit', function(req, res, next) {
                 } else {
                     edit({name: data.oldname},{name: data.name});
                 }
-                // 更新图
+                // 更新图片中用户信息
                 Imgtotal.update({creator: data.oldname},{$set:{creator: data.name}}, {multi:true}, function(err,result){
                     console.log(result);
                 });

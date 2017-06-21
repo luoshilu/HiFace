@@ -6,13 +6,11 @@ router.post('/', function(req, res, next) {
     console.log("session:");
     console.log(req.session);
     if (req.session) {
-      console.log('====id====');
-      console.log(req.session.id);
       res.cookie('connect.sid',req.session.id);
       res.end();
-      // res.redirect('/index.html');
     }else if(!req.username){
       console.log("已登录");
+      res.end();
     }else{
       // 查询用户信息
       Users.find({name: req.username},function(err,result){
@@ -26,7 +24,7 @@ router.post('/', function(req, res, next) {
           });
         }else{
           console.log("未查询到");
-          // res.redirect('/index.html');
+          res.end();
         }
       })
     }

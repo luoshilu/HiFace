@@ -39,8 +39,8 @@ app.use(cors({
 }));
 
 // view engine setup
-/*app.set('views', path.join(__dirname, 'views/dist'));
-app.set('view engine', 'ejs');*/
+// app.set('views', path.join(__dirname, 'public'));
+// app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -48,7 +48,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req,res,next){
   res.header("Access-Control-Allow-Origin", req.headers.origin); //需要显示设置来源
@@ -56,9 +56,9 @@ app.use(function (req,res,next){
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 })
-app.get('/*', function (req,res,next){
-  res.redirect('/');
-})
+/*app.get('/*', function (req,res,next){
+  res.sensdfile('index.html');
+})*/
 // 查询当前用户
 app.use(nowUser);
 
@@ -94,7 +94,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

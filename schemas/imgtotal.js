@@ -11,11 +11,11 @@ var imgTotalSchema = new mongoose.Schema({
     meta: {
         createAt: {
             type: Date,
-            default: Date.now()
+            default: new Date().toLocaleString()
         },
         updateAt: {
             type: Date,
-            default: Date.now()
+            default: new Date().toLocaleString()
         }
     }
 });
@@ -27,9 +27,9 @@ imgTotalSchema.statics.findbytitle = function(title, callback) {
 //每次执行都会调用,时间更新操作
 imgTotalSchema.pre('save', function(next) {
     if(this.isNew) {
-        this.meta.createAt = this.meta.updateAt = Date.now();
+        this.meta.createAt = this.meta.updateAt = new Date().toLocaleString();
     }else {
-        this.meta.updateAt = Date.now();
+        this.meta.updateAt = new Date().toLocaleString();
     }
     next();
 });

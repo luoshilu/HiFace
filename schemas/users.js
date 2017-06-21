@@ -11,11 +11,11 @@ var UsersSchema = new mongoose.Schema({
     meta: {
         createAt: {
             type: Date,
-            default: Date.now()
+            default: new Date().toLocaleString()
         },
         updateAt: {
             type: Date,
-            default: Date.now()
+            default: new Date().toLocaleString()
         }
     }
 });
@@ -27,9 +27,9 @@ UsersSchema.statics.findbytitle = function(title, callback) {
 //每次执行都会调用,时间更新操作
 UsersSchema.pre('save', function(next) {
     if(this.isNew) {
-        this.meta.createAt = this.meta.updateAt = Date.now('yyyy/mm/dd/ HH:mm:ss');
+        this.meta.createAt = this.meta.updateAt = new Date().toLocaleString();
     }else {
-        this.meta.updateAt = Date.now('yyyy/mm/dd/ HH:mm:ss');
+        this.meta.updateAt = new Date().toLocaleString();
     }
     next();
 });

@@ -26,6 +26,21 @@ router.post('/',function(req, res, next){
             cookie = JSON.parse(ck);
             if (cookie.cookie) {
               var strck = JSON.stringify(cookie.cookie);
+            }else{
+              //  过期
+              // 将用户名加入到redis session中
+              redis.hmset("sess:" + req.session.id,{'mail': mail,name: name},function(){
+                  // 设定有效时间
+                  redis.expire(ssId,600,function(err,result){
+                    console.log('设定有效时间:');
+                    console.log(result);
+                    redis.ttl(ssId,function(err,result){
+                      console.log('ttl:');
+                      console.log(result);
+                    })
+                  })
+              })
+              return
             }
             redis.del(ssId,function(){
               // 将用户名加入到redis session中

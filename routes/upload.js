@@ -17,6 +17,8 @@ function setUpload (bucket,imgNum,_id,res) {
         }
         //生成上传 Token
         var token = uptoken(bucket);
+        console.log("=====imgNum====>");
+        console.log(imgNum);
         res.json({uptoken: token, imgNum: imgNum, id: _id});
     }catch (e) {
         console.log('错误:' + e);
@@ -26,21 +28,22 @@ function setUpload (bucket,imgNum,_id,res) {
 router.post('/',function(req, res){
 
     var name = req.body.username;
-    console.log(name);
     Users.find({name: name}, function (err, user) {
+      console.log("======user=>");
+      console.log(user);
       var findimgNum = user[0].imgNum;
       var _id = user[0]._id;
       if (err) {
         return
-      }else if(findimgNum === undefined){
+      }else if(!findimgNum){
         Users.update(
             {_id:_id},
             {imgNum: 1},
             function(){}
         )
-        setUpload('img-total', 1, res);
+        setUpload('img-total', 1,  _id, res);
       }else{
-        setUpload('img-total', user[0].imgNum + 1, _id, res);
+        setUpload('img-total', findimgNum + 1, _id, res);
       }
     })
 });
@@ -82,12 +85,15 @@ router.post('/result',function(req, res, next){
     })
 });
 // 分享
-router.post('/share',function(req, res, next){
+router.post('/share',function(req, res){
     var img = req.body;
+    console.log(img);
     // 设置最新图片为5天内的更新
     img.expire = (new Date() - 0 + (60000 * 60 * 24 * 5));
     // 新增分享图片
     Imgnewest.create(img,function(err,back){
+        console.log("back:");
+        console.log(back);
         if (back) {
             res.json({data: true});
         }else{
