@@ -44,7 +44,7 @@
 
 二. 安装redis
 
-    [redis下载官网](https://redis.io/download)
+[redis下载官网](https://redis.io/download)
 
 三. 安装mongodb
 
