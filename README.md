@@ -91,7 +91,6 @@
     var redis = rediz.createClient({"host": "127.0.0.1", "port": "6379"});
 ```
 
-```
-仅供学习使用
-by luo
-```
+
+> 仅供学习使用 by luo
+
