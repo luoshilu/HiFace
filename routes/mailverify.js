@@ -2,7 +2,8 @@ var nodemailer = require('nodemailer');
 var express = require('express');
 var router = express.Router();
 var Sign = require('../modules/signing');
-
+var mail = require('../conf/mail');
+var conf = require('../conf/conf');
 // 密钥生成
 function getkey () {
     // 
@@ -41,18 +42,18 @@ function getkey () {
 router.post('/',function(req,res){
     var data = req.body
     var transporter = nodemailer.createTransport({
-        service: 'qq',
+        service: mail.service,
         auth: {
-            user: '978337784@qq.com',
-            pass: 'zonrbezxkahdbebc'
+            user: mail.mail,
+            pass: mail.key
         }
     });
     var key = getkey();
     // 激活链接
-    var link = "http://118.89.104.12/actId?mail="+ data.mail +"&key="+ key;
+    var link = "http://"+conf.host+"/actId?mail="+ data.mail +"&key="+ key;
 
     var mailOptions = {
-        from: '978337784@qq.com', // sender address
+        from: mail.mail, // sender address
         to: data.mail, // list of receivers
         subject: '欢迎注册HiFace', // Subject line
         text: '这是激活链接:', // plaintext body

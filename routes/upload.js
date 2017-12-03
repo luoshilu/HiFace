@@ -17,19 +17,16 @@ function setUpload (bucket,imgNum,_id,res) {
         }
         //生成上传 Token
         var token = uptoken(bucket);
-        console.log("=====imgNum====>");
-        console.log(imgNum);
         res.json({uptoken: token, imgNum: imgNum, id: _id});
     }catch (e) {
         console.log('错误:' + e);
     }
 }
-
+// 上传
 router.post('/',function(req, res){
 
     var name = req.body.username;
     Users.find({name: name}, function (err, user) {
-      console.log("======user=>");
       console.log(user);
       var findimgNum = user[0].imgNum;
       var _id = user[0]._id;
@@ -52,7 +49,7 @@ router.post('/',function(req, res){
 router.post('/result',function(req, res, next){
 
     var data = req.body;
-    var imgurl = 'http://oowoia3ge.bkt.clouddn.com/' + data.key;
+    var imgurl = qiniu.url +'/'+ data.key;
     var name = data.name;
     var imgNum = data.imgNum;
     var tag = data.tag;
@@ -120,7 +117,7 @@ router.post('/head',function(req, res){
 router.post('/head/result',function(req, res, next){
 
     var data = req.body;
-    var imgurl = 'http://oowoopghd.bkt.clouddn.com/' + data.key;
+    var imgurl = qiniu.url +'/'+ data.key;
     var name = data.name;
     console.log('=-=用户data===');
     console.log(data);

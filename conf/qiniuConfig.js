@@ -1,7 +1,9 @@
 var qiniu = require("qiniu");
 
 //需要填写你的 Access Key 和 Secret Key
-qiniu.conf.ACCESS_KEY = '-ChUD7EjnFxh_BJgVCSNdgn_SmYRKry-Dkx9ToAZ';
-qiniu.conf.SECRET_KEY = 'O-5Y2yz687cOxP1QuFRksQ4vCF7IANqivQ48u6_P';
+qiniu.conf.ACCESS_KEY = 'Access Key';
+qiniu.conf.SECRET_KEY = 'Secret Key';
+
+qiniu.url = '你的七牛云url';// 例如 http://qawoia2fd.bkt.clouddn.com
 
 module.exports = qiniu
