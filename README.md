@@ -12,16 +12,16 @@
 # 项目部分截图
 
 ### 主页
-![image](https://github.com/luoshilu/luoshilu.github.io/HiFace/tree/master/static/img/index.png)
+![image](https://github.com/luoshilu/HiFace/blob/master/public/img/index.png)
 
 ### 最新表情图列表
-![image](https://github.com/luoshilu/luoshilu.github.io/HiFace/tree/master/static/img/new.png)
+![image](https://github.com/luoshilu/HiFace/blob/master/public/img/new.png)
 
 ### 制作表情
-![image](https://github.com/luoshilu/luoshilu.github.io/HiFace/tree/master/static/img/make2.png)
+![image](https://github.com/luoshilu/HiFace/blob/master/public/img/make2.png)
 
 ### 发布-分享-最新表情更新
-![image](https://github.com/luoshilu/luoshilu.github.io/HiFace/tree/master/static/img/show.png)
+![image](https://github.com/luoshilu/HiFace/blob/master/public/img/show.png)
 
 # install
 
