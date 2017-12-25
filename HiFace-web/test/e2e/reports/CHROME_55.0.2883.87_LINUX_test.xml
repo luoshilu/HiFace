@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="1"
+            tests="1">
+
+  <testsuite name="test"
+    errors="0" failures="1" hostname="" id="" package="test" skipped="0"
+    tests="1" time="34.24" timestamp="Thu, 25 May 2017 01:16:18 GMT">
+  
+    <testcase name="default e2e tests" time="34.24" assertions="1">  <failure message="Timed out while waiting for element &lt;#app&gt; to be present for 5000 milliseconds.">    at Object.defaultE2eTests [as default e2e tests] (/home/luo/Desktop/my-project/test/e2e/specs/test.js:13:8)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)</failure>
+
+    
+    </testcase>
+  
+  
+  </testsuite>
+</testsuites>
