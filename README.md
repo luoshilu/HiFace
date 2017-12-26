@@ -25,7 +25,6 @@
 
 ### 发布-分享-最新表情更新
 
->>>>>>> 3e53fa83887a6641217b26fa9ae3b1ac47a80745
 ![image](https://github.com/luoshilu/HiFace/blob/master/public/img/show.png)
 
 # install
@@ -38,9 +37,11 @@
     git clone git@github.com:luoshilu/HiFace.git
     cd HiFace
     npm install
+    npm run dev
 
     cd HiFace-web
     npm install
+    node app.js
 ```
 
 二. 安装redis
